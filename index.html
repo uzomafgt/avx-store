@@ -3,255 +3,282 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AVX STORE — Open Marketplace</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<title>AVX STORE</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --black:#0a0a0a;--off:#111;--card:#161616;--border:#2a2a2a;
+  --bg:#0a0a0a;--off:#111111;--card:#161616;--border:#2a2a2a;
   --white:#f5f5f5;--dim:#666;--tag:#1e1e1e;--red:#ff4444;--gold:#facc15;
 }
-body{background:var(--black);color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:15px;min-height:100vh;}
-input,textarea,select{font-family:inherit;}
-button{font-family:inherit;cursor:pointer;}
+body{background:var(--bg);color:var(--white);font-family:'Space Grotesk',sans-serif;min-height:100vh;}
+button,input,textarea,select{font-family:inherit;}
+button{cursor:pointer;}
+a{text-decoration:none;color:inherit;}
+
 /* NAV */
-#nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.96);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;}
-.logo{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;letter-spacing:.1em;color:var(--white);cursor:pointer;}
-.logo span{color:var(--dim);}
-.nav-links{display:flex;gap:18px;align-items:center;}
-.nav-link{font-size:12px;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;padding-bottom:2px;border-bottom:1px solid transparent;transition:all .2s;}
-.nav-link:hover,.nav-link.active{color:var(--white);border-bottom-color:var(--white);}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .2s;letter-spacing:.03em;}
-.btn-white{background:var(--white);color:var(--black);}
-.btn-white:hover{background:#ddd;}
-.btn-ghost{background:transparent;color:var(--white);border:1px solid var(--border);}
-.btn-ghost:hover{border-color:var(--white);}
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(10,10,10,0.97);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:58px;
+}
+.logo{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;letter-spacing:.1em;cursor:pointer;}
+.logo b{color:var(--dim);font-weight:700;}
+.nav-right{display:flex;align-items:center;gap:16px;}
+.nav-link{font-size:11px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .2s;}
+.nav-link:hover,.nav-link.active{color:var(--white);}
+.btn{padding:8px 18px;border-radius:4px;font-size:12px;font-weight:700;border:none;cursor:pointer;transition:all .2s;letter-spacing:.03em;}
+.btn-w{background:var(--white);color:var(--bg);}
+.btn-w:hover{background:#ddd;}
+.btn-g{background:transparent;color:var(--white);border:1px solid var(--border);}
+.btn-g:hover{border-color:var(--white);}
+
+/* USER DROPDOWN */
+.user-wrap{position:relative;}
+.user-btn{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 8px;border-radius:4px;transition:background .2s;}
+.user-btn:hover{background:var(--card);}
+.user-av{width:30px;height:30px;border-radius:50%;background:var(--tag);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:12px;}
+.user-dd{display:none;position:absolute;top:48px;right:0;background:var(--off);border:1px solid var(--border);border-radius:6px;min-width:180px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.user-dd.open{display:block;}
+.dd-info{padding:14px 16px;border-bottom:1px solid var(--border);}
+.dd-name{font-size:13px;font-weight:600;}
+.dd-email{font-size:11px;color:var(--dim);margin-top:2px;}
+.dd-item{padding:12px 16px;font-size:13px;cursor:pointer;transition:background .15s;}
+.dd-item:hover{background:var(--card);}
+.dd-item.danger{color:var(--red);}
+
 /* HERO */
 .hero{padding:72px 24px 52px;max-width:760px;margin:0 auto;text-align:center;}
 .eyebrow{display:inline-block;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);border:1px solid var(--border);padding:4px 14px;border-radius:2px;margin-bottom:24px;}
-.hero h1{font-family:'Space Mono',monospace;font-size:clamp(34px,8vw,68px);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:18px;}
-.hero h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
+.hero h1{font-family:'Space Mono',monospace;font-size:clamp(32px,8vw,64px);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:18px;}
+.outline{color:transparent;-webkit-text-stroke:1.5px var(--white);}
 .hero p{font-size:15px;color:var(--dim);max-width:420px;margin:0 auto 32px;line-height:1.7;}
 .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);max-width:860px;margin:0 auto;}
+.stats-wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);}
 .stat{background:var(--off);padding:24px 16px;text-align:center;border-right:1px solid var(--border);}
 .stat:last-child{border-right:none;}
-.stat-num{font-family:'Space Mono',monospace;font-size:clamp(20px,4vw,34px);font-weight:700;display:block;margin-bottom:4px;}
-.stat-label{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.12em;}
+.stat-n{font-family:'Space Mono',monospace;font-size:clamp(18px,4vw,32px);font-weight:700;display:block;margin-bottom:4px;}
+.stat-l{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.12em;}
+
 /* SEARCH */
-.search-wrap{max-width:860px;margin:36px auto 0;padding:0 24px;}
-.search-bar{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:0 16px;gap:10px;}
-.search-bar:focus-within{border-color:var(--white);}
-.search-bar input{flex:1;background:none;border:none;outline:none;color:var(--white);font-size:14px;padding:13px 0;}
-.search-bar input::placeholder{color:var(--dim);}
+.search-wrap{max-width:900px;margin:32px auto 0;padding:0 24px;}
+.sbar{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:0 16px;gap:10px;}
+.sbar:focus-within{border-color:var(--white);}
+.sbar input{flex:1;background:none;border:none;outline:none;color:var(--white);font-size:14px;padding:13px 0;}
+.sbar input::placeholder{color:var(--dim);}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
-.chip{font-size:11px;font-weight:500;padding:5px 13px;border-radius:100px;background:var(--tag);color:var(--dim);border:1px solid var(--border);cursor:pointer;text-transform:capitalize;transition:all .15s;}
-.chip:hover,.chip.active{background:var(--white);color:var(--black);border-color:var(--white);}
+.chip{font-size:11px;padding:5px 13px;border-radius:100px;background:var(--tag);color:var(--dim);border:1px solid var(--border);cursor:pointer;text-transform:capitalize;transition:all .15s;}
+.chip:hover,.chip.on{background:var(--white);color:var(--bg);border-color:var(--white);}
+
 /* SECTION */
-.section{max-width:1100px;margin:44px auto;padding:0 24px;}
-.sec-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:22px;}
+.sec{max-width:1100px;margin:44px auto;padding:0 24px;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:22px;}
 .sec-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);}
 .sec-count{font-size:11px;color:var(--dim);}
-/* PRODUCT GRID */
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px;}
-.product-card{background:var(--black);border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:background .2s;}
-.product-card:hover{background:var(--card);}
-.card-img{width:100%;aspect-ratio:1;background:var(--card);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-.card-img img{width:100%;height:100%;object-fit:cover;}
-.card-badge{position:absolute;top:10px;left:10px;background:var(--black);color:var(--white);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);}
-.card-body{padding:14px 14px 44px;}
-.card-seller{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;}
-.card-name{font-weight:600;font-size:13px;color:var(--white);margin-bottom:5px;line-height:1.3;}
-.card-stars{display:flex;align-items:center;gap:5px;margin-bottom:6px;}
-.card-stars .stars{font-size:11px;letter-spacing:1px;}
-.card-stars span{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);}
-.card-footer{display:flex;align-items:center;justify-content:space-between;}
-.card-price{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:var(--white);}
-.card-cat{font-size:10px;padding:2px 8px;border-radius:100px;background:var(--tag);color:var(--dim);border:1px solid var(--border);text-transform:capitalize;}
-.card-actions{position:absolute;bottom:0;left:0;right:0;padding:8px 12px;background:linear-gradient(transparent,var(--card));display:flex;gap:6px;opacity:0;transform:translateY(8px);transition:all .22s;}
-.product-card:hover .card-actions{opacity:1;transform:translateY(0);}
-.card-actions button{flex:1;padding:7px 0;font-size:11px;font-weight:700;cursor:pointer;border-radius:3px;border:none;}
-.card-buy{background:var(--white);color:var(--black);}
-/* SELLERS STRIP */
-.sellers-strip{display:flex;gap:2px;overflow-x:auto;padding-bottom:4px;}
-.seller-card{background:var(--off);flex:0 0 172px;padding:18px 16px;border:1px solid var(--border);cursor:pointer;transition:background .2s;}
-.seller-card:hover{background:var(--card);}
-.seller-av{width:36px;height:36px;border-radius:50%;background:var(--tag);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--white);margin-bottom:10px;}
-.seller-name{font-weight:600;font-size:12px;margin-bottom:2px;}
-.seller-meta{font-size:11px;color:var(--dim);}
-.seller-rating{font-family:'Space Mono',monospace;font-size:11px;color:var(--white);margin-top:6px;}
+
+/* GRID */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px;}
+.pcard{background:var(--bg);border:1px solid var(--border);cursor:pointer;position:relative;overflow:hidden;transition:background .2s;}
+.pcard:hover{background:var(--card);}
+.pcard-img{width:100%;aspect-ratio:1;background:var(--card);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+.pcard-img img{width:100%;height:100%;object-fit:cover;}
+.badge{position:absolute;top:10px;left:10px;background:var(--bg);color:var(--white);font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);}
+.pcard-body{padding:13px 13px 42px;}
+.pcard-seller{font-size:10px;color:var(--dim);letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px;}
+.pcard-name{font-weight:600;font-size:13px;margin-bottom:5px;line-height:1.3;}
+.pcard-stars{font-size:11px;color:var(--gold);margin-bottom:5px;}
+.pcard-foot{display:flex;align-items:center;justify-content:space-between;}
+.pcard-price{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;}
+.pcard-cat{font-size:10px;padding:2px 8px;border-radius:100px;background:var(--tag);color:var(--dim);border:1px solid var(--border);text-transform:capitalize;}
+.pcard-actions{position:absolute;bottom:0;left:0;right:0;padding:8px 12px;background:linear-gradient(transparent,var(--card));opacity:0;transform:translateY(8px);transition:all .22s;}
+.pcard:hover .pcard-actions{opacity:1;transform:translateY(0);}
+.pcard-actions button{width:100%;padding:7px;font-size:11px;font-weight:700;border:none;border-radius:3px;background:var(--white);color:var(--bg);}
+
+/* SELLERS */
+.sstrip{display:flex;gap:2px;overflow-x:auto;padding-bottom:4px;}
+.scard{background:var(--off);flex:0 0 170px;padding:18px 16px;border:1px solid var(--border);cursor:pointer;transition:background .2s;}
+.scard:hover{background:var(--card);}
+.sav{width:36px;height:36px;border-radius:50%;background:var(--tag);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:11px;margin-bottom:10px;}
+.sname{font-weight:600;font-size:12px;margin-bottom:2px;}
+.smeta{font-size:11px;color:var(--dim);}
+.srating{font-family:'Space Mono',monospace;font-size:11px;color:var(--gold);margin-top:6px;}
+
+/* SELLERS PAGE GRID */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px;}
+.sgcard{background:var(--off);padding:24px 20px;border:1px solid var(--border);cursor:pointer;transition:background .2s;}
+.sgcard:hover{background:var(--card);}
+
+/* PAGES */
+.pg{display:none;}
+.pg.active{display:block;}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.9);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:var(--off);border:1px solid var(--border);border-radius:8px;width:100%;max-height:92vh;overflow-y:auto;}
+.mhead{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.mhead h3{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
+.mclose{background:none;border:none;color:var(--dim);font-size:18px;line-height:1;}
+.mclose:hover{color:var(--white);}
+.mbody{padding:22px 24px;display:flex;flex-direction:column;gap:15px;}
+.mfoot{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
+
+/* FORM */
+.fl{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
+.fi{width:100%;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--white);font-size:14px;padding:11px 14px;outline:none;transition:border-color .2s;}
+.fi:focus{border-color:var(--white);}
+textarea.fi{resize:vertical;min-height:80px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.dzone{border:1px dashed var(--border);border-radius:4px;padding:28px 20px;text-align:center;cursor:pointer;position:relative;transition:all .2s;}
+.dzone:hover{border-color:var(--white);background:var(--card);}
+.dzone input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;}
+.dzone p{font-size:13px;color:var(--dim);}
+.dzone strong{color:var(--white);}
+
+/* AUTH TABS */
+.atabs{display:flex;margin:16px 24px 0;border-bottom:1px solid var(--border);}
+.atab{flex:1;text-align:center;padding:10px 0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:all .2s;}
+.atab.on{color:var(--white);border-bottom-color:var(--white);}
+
+/* PAY METHODS */
+.pm{display:flex;align-items:center;gap:14px;padding:13px 16px;border-radius:6px;cursor:pointer;border:1px solid var(--border);transition:all .15s;margin-bottom:8px;}
+.pm.on{border-color:var(--white);background:#1a1a1a;}
+.pm-icon{width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.pm-info strong{display:block;font-size:13px;}
+.pm-info span{font-size:11px;color:var(--dim);}
+.pm-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);margin-left:auto;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pm-radio.on::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--white);display:block;}
+.pm-radio.on{border-color:var(--white);}
+
+/* DETAIL IMG */
+.dimg{width:100%;height:220px;background:var(--card);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+.dimg img{width:100%;height:100%;object-fit:cover;}
+
+/* REVIEWS */
+.rv{padding:13px 0;border-bottom:1px solid var(--border);}
+.rv:last-child{border-bottom:none;}
+.rv-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.rv-av{width:28px;height:28px;border-radius:50%;background:var(--tag);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;flex-shrink:0;}
+.rv-name{font-weight:600;font-size:13px;}
+.rv-stars{font-size:11px;color:var(--gold);}
+.rv-text{font-size:13px;color:var(--dim);line-height:1.5;padding-left:36px;}
+
+/* STAR PICK */
+.spick span{font-size:24px;cursor:pointer;color:var(--dim);transition:color .15s;}
+.spick span.on{color:var(--gold);}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--white);color:var(--bg);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:4px;z-index:600;white-space:nowrap;transition:transform .3s;box-shadow:0 4px 24px rgba(0,0,0,.6);pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ERR */
+.err{font-size:12px;color:var(--red);text-align:center;padding:7px 12px;background:rgba(255,68,68,.08);border-radius:4px;}
+
 /* FOOTER */
 footer{border-top:1px solid var(--border);padding:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-top:40px;}
-footer p{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.08em;}
-/* PAGES */
-.page{display:none;}
-.page.active{display:block;}
-/* MODAL OVERLAY */
-.overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.9);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
-.overlay.open{display:flex;}
-.modal{background:var(--off);border:1px solid var(--border);border-radius:8px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
-.modal-header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.modal-header h3{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--white);}
-.modal-close{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;line-height:1;}
-.modal-body{padding:22px 24px;display:flex;flex-direction:column;gap:16px;}
-.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;}
-/* FORM */
-.field label{display:block;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
-.field input,.field textarea,.field select{width:100%;background:var(--card);border:1px solid var(--border);border-radius:4px;color:var(--white);font-size:14px;padding:11px 14px;outline:none;transition:border-color .2s;}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--white);}
-.field textarea{resize:vertical;min-height:80px;}
-.field select option{background:var(--card);}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.drop-zone{border:1px dashed var(--border);border-radius:4px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
-.drop-zone:hover{border-color:var(--white);background:var(--card);}
-.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-.drop-zone p{font-size:13px;color:var(--dim);}
-.drop-zone p strong{color:var(--white);}
-/* AUTH TABS */
-.auth-tabs{display:flex;margin:16px 24px 0;border-bottom:1px solid var(--border);}
-.auth-tab{flex:1;text-align:center;padding:10px 0;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:all .2s;}
-.auth-tab.active{color:var(--white);border-bottom-color:var(--white);}
-/* PAYMENT */
-.pay-method{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:transparent;transition:all .15s;margin-bottom:8px;}
-.pay-method.selected{border-color:var(--white);background:#1a1a1a;}
-.pay-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.pay-info{flex:1;}
-.pay-info strong{display:block;font-size:13px;color:var(--white);}
-.pay-info span{font-size:11px;color:var(--dim);}
-.pay-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.pay-radio.checked{border-color:var(--white);}
-.pay-radio.checked::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--white);display:block;}
-/* REVIEW */
-.review-item{padding:14px 0;border-bottom:1px solid var(--border);}
-.review-item:last-child{border-bottom:none;}
-.review-user{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.review-av{width:28px;height:28px;border-radius:50%;background:var(--tag);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--white);}
-/* DETAIL MODAL */
-.detail-img{width:100%;height:220px;background:var(--card);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
-.detail-img img{width:100%;height:100%;object-fit:cover;}
-/* TOAST */
-#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--white);color:var(--black);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:4px;z-index:600;white-space:nowrap;transition:transform .3s;box-shadow:0 4px 24px rgba(0,0,0,.6);}
-#toast.show{transform:translateX(-50%) translateY(0);}
-/* ERROR */
-.err{font-size:12px;color:var(--red);text-align:center;padding:6px;background:rgba(255,68,68,.08);border-radius:4px;}
-/* STAR PICKER */
-.star-pick span{font-size:22px;cursor:pointer;color:var(--dim);transition:color .15s;}
-.star-pick span.on{color:var(--gold);}
-/* NO RESULTS */
-.empty{padding:60px 0;text-align:center;color:var(--dim);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;}
-/* RESPONSIVE */
+footer p{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.06em;}
+.empty{padding:60px 0;text-align:center;color:var(--dim);font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.1em;grid-column:1/-1;}
+
 @media(max-width:600px){
-  #nav{padding:0 14px;}
-  .nav-links .nav-link{display:none;}
-  .hero{padding:52px 16px 40px;}
-  .stats,.search-wrap,.section{padding-left:16px;padding-right:16px;}
-  .field-row{grid-template-columns:1fr;}
-  footer{padding:20px 16px;flex-direction:column;align-items:flex-start;}
+  nav{padding:0 14px;}
+  .nav-link{display:none;}
+  .hero{padding:48px 16px 36px;}
+  .stats-wrap,.search-wrap,.sec{padding-left:14px;padding-right:14px;}
+  .frow{grid-template-columns:1fr;}
+  footer{padding:18px 14px;flex-direction:column;align-items:flex-start;}
 }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<div id="nav">
-  <div class="logo" onclick="goTo('home')">AVX <span>STORE</span></div>
-  <div class="nav-links">
-    <div class="nav-link" id="nav-browse" onclick="goTo('browse')">Browse</div>
-    <div class="nav-link" id="nav-sellers" onclick="goTo('sellers')">Sellers</div>
-    <div id="nav-auth-btns">
-      <div style="display:flex;gap:8px;">
-        <button class="btn btn-ghost" onclick="openAuth('login')">Login</button>
-        <button class="btn btn-white" onclick="openAuth('signup')">Sign Up</button>
-      </div>
+<nav>
+  <div class="logo" onclick="goTo('home')">AVX <b>STORE</b></div>
+  <div class="nav-right">
+    <span class="nav-link" id="nl-browse" onclick="goTo('browse')">Browse</span>
+    <span class="nav-link" id="nl-sellers" onclick="goTo('sellers')">Sellers</span>
+    <div id="auth-btns" style="display:flex;gap:8px;">
+      <button class="btn btn-g" onclick="openAuth('login')">Login</button>
+      <button class="btn btn-w" onclick="openAuth('signup')">Sign Up</button>
     </div>
-    <div id="nav-user" style="display:none;align-items:center;gap:10px;position:relative;">
-      <button class="btn btn-white" onclick="openModal('list-modal')">+ List</button>
-      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="toggleUserMenu()">
-        <div id="user-av" style="width:30px;height:30px;border-radius:50%;background:var(--tag);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:12px;color:var(--white);">U</div>
-        <span id="user-name" style="font-size:12px;color:var(--dim);"></span>
+    <div class="user-wrap" id="user-wrap" style="display:none;">
+      <button class="btn btn-w" onclick="openListModal()" style="margin-right:6px;">+ List</button>
+      <div class="user-btn" onclick="toggleDD()">
+        <div class="user-av" id="u-av">U</div>
+        <span id="u-name" style="font-size:12px;color:var(--dim);"></span>
         <span style="font-size:10px;color:var(--dim);">▾</span>
       </div>
-      <!-- Dropdown -->
-      <div id="user-dropdown" style="display:none;position:absolute;top:44px;right:0;background:var(--off);border:1px solid var(--border);border-radius:6px;min-width:160px;z-index:999;overflow:hidden;">
-        <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
-          <div id="dropdown-name" style="font-size:13px;font-weight:600;color:var(--white);"></div>
-          <div id="dropdown-email" style="font-size:11px;color:var(--dim);margin-top:2px;"></div>
+      <div class="user-dd" id="u-dd">
+        <div class="dd-info">
+          <div class="dd-name" id="dd-name"></div>
+          <div class="dd-email" id="dd-email"></div>
         </div>
-        <div onclick="openModal('list-modal');toggleUserMenu()" style="padding:11px 16px;font-size:13px;color:var(--white);cursor:pointer;border-bottom:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='transparent'">+ List Product</div>
-        <div onclick="doLogout()" style="padding:11px 16px;font-size:13px;color:var(--red);cursor:pointer;transition:background .15s;" onmouseover="this.style.background='var(--card)'" onmouseout="this.style.background='transparent'">Sign Out</div>
+        <div class="dd-item" onclick="openListModal();closeDD()">+ List Product</div>
+        <div class="dd-item danger" onclick="doLogout()">Sign Out</div>
       </div>
     </div>
   </div>
-</div>
+</nav>
 
-<!-- ── HOME PAGE ── -->
-<div id="page-home" class="page active">
+<!-- HOME -->
+<div id="pg-home" class="pg active">
   <div class="hero">
     <div class="eyebrow">Open Marketplace · Zero Limits</div>
     <h1>Sell <span class="outline">anything.</span><br/>Reach everyone.</h1>
     <p>AVX STORE — list your products, connect with buyers, get paid your way.</p>
     <div class="hero-btns">
-      <button class="btn btn-white" onclick="currentUser?openModal('list-modal'):openAuth('signup')">Start Selling</button>
-      <button class="btn btn-ghost" onclick="goTo('browse')">Browse Products ↓</button>
+      <button class="btn btn-w" onclick="STATE.user?openListModal():openAuth('signup')">Start Selling</button>
+      <button class="btn btn-g" onclick="goTo('browse')">Browse Products ↓</button>
     </div>
   </div>
-
-  <div style="max-width:860px;margin:0 auto;padding:0 24px;">
+  <div class="stats-wrap">
     <div class="stats">
-      <div class="stat"><span class="stat-num">₦2.4B+</span><span class="stat-label">Total Sales</span></div>
-      <div class="stat" id="stat-products"><span class="stat-num">8</span><span class="stat-label">Products</span></div>
-      <div class="stat" id="stat-sellers"><span class="stat-num">6</span><span class="stat-label">Sellers</span></div>
+      <div class="stat"><span class="stat-n">₦2.4B+</span><span class="stat-l">Total Sales</span></div>
+      <div class="stat"><span class="stat-n" id="s-products">8</span><span class="stat-l">Products</span></div>
+      <div class="stat"><span class="stat-n" id="s-sellers">6</span><span class="stat-l">Sellers</span></div>
     </div>
   </div>
-
-  <div class="search-wrap" style="margin-top:36px;">
-    <div class="search-bar">
-      <span style="color:var(--dim);">🔍</span>
-      <input type="text" id="home-search" placeholder="Search products, sellers…" oninput="renderHome()"/>
-    </div>
-    <div class="chips" id="home-chips"></div>
+  <div class="search-wrap">
+    <div class="sbar"><span style="color:var(--dim)">🔍</span><input type="text" id="h-search" placeholder="Search products, sellers…" oninput="renderHome()"/></div>
+    <div class="chips" id="h-chips"></div>
   </div>
-
-  <div class="section">
-    <div class="sec-header">
-      <div class="sec-title">Latest Listings</div>
-      <div class="sec-count" id="home-count"></div>
-    </div>
-    <div class="product-grid" id="home-grid"></div>
+  <div class="sec">
+    <div class="sec-head"><span class="sec-title">Latest Listings</span><span class="sec-count" id="h-count"></span></div>
+    <div class="pgrid" id="h-grid"></div>
   </div>
-
-  <div class="section" style="margin-top:0;">
-    <div class="sec-header"><div class="sec-title">Top Sellers</div></div>
-    <div class="sellers-strip" id="home-sellers"></div>
+  <div class="sec" style="margin-top:0;">
+    <div class="sec-head"><span class="sec-title">Top Sellers</span></div>
+    <div class="sstrip" id="h-sellers"></div>
   </div>
 </div>
 
-<!-- ── BROWSE PAGE ── -->
-<div id="page-browse" class="page">
-  <div class="section" style="margin-top:28px;">
-    <div style="margin-bottom:24px;">
-      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;">All Products</div>
-      <div style="font-size:24px;font-weight:700;color:var(--white);">Browse Everything</div>
+<!-- BROWSE -->
+<div id="pg-browse" class="pg">
+  <div class="sec" style="margin-top:28px;">
+    <div style="margin-bottom:22px;">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;">All Products</div>
+      <div style="font-size:24px;font-weight:700;">Browse Everything</div>
     </div>
-    <div class="search-bar" style="margin-bottom:14px;">
-      <span style="color:var(--dim);">🔍</span>
-      <input type="text" id="browse-search" placeholder="Search products, sellers…" oninput="renderBrowse()"/>
-    </div>
-    <div class="chips" id="browse-chips"></div>
-    <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);margin:16px 0 6px;letter-spacing:.06em;" id="browse-count"></div>
-    <div class="product-grid" id="browse-grid"></div>
+    <div class="sbar" style="margin-bottom:12px;"><span style="color:var(--dim)">🔍</span><input type="text" id="b-search" placeholder="Search…" oninput="renderBrowse()"/></div>
+    <div class="chips" id="b-chips"></div>
+    <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);margin:14px 0 6px;letter-spacing:.06em;" id="b-count"></div>
+    <div class="pgrid" id="b-grid"></div>
   </div>
 </div>
 
-<!-- ── SELLERS PAGE ── -->
-<div id="page-sellers" class="page">
-  <div class="section" style="margin-top:28px;">
-    <div style="margin-bottom:24px;">
-      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;">Marketplace</div>
-      <div style="font-size:24px;font-weight:700;color:var(--white);">Top Sellers</div>
+<!-- SELLERS -->
+<div id="pg-sellers" class="pg">
+  <div class="sec" style="margin-top:28px;">
+    <div style="margin-bottom:22px;">
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;">Marketplace</div>
+      <div style="font-size:24px;font-weight:700;">Top Sellers</div>
     </div>
-    <div id="sellers-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px;"></div>
+    <div class="sgrid" id="sg"></div>
   </div>
 </div>
 
@@ -260,36 +287,32 @@ footer p{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);lett
   <p>Open marketplace. All categories.</p>
 </footer>
 
-<!-- ── AUTH MODAL ── -->
-<div class="overlay" id="auth-overlay" onclick="overlayClose(event,'auth-overlay')">
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-modal" onclick="if(event.target===this)closeM('auth-modal')">
   <div class="modal" style="max-width:420px;">
-    <div class="modal-header">
-      <div style="font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--white);">AVX <span style="color:var(--dim);">STORE</span></div>
-      <button class="modal-close" onclick="closeModal('auth-overlay')">✕</button>
+    <div class="mhead">
+      <div style="font-family:'Space Mono',monospace;font-size:15px;font-weight:700;">AVX <span style="color:var(--dim);">STORE</span></div>
+      <button class="mclose" onclick="closeM('auth-modal')">✕</button>
     </div>
-    <div class="auth-tabs">
-      <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</div>
-      <div class="auth-tab" id="tab-signup" onclick="switchTab('signup')">Signup</div>
+    <div class="atabs">
+      <div class="atab on" id="at-login" onclick="switchTab('login')">Login</div>
+      <div class="atab" id="at-signup" onclick="switchTab('signup')">Signup</div>
     </div>
-    <div class="modal-body">
-      <div class="field" id="auth-name-field" style="display:none;">
-        <label>Full Name</label>
-        <input type="text" id="auth-name" placeholder="e.g. Uzoma Johnson"/>
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" id="auth-email" placeholder="you@email.com"/>
-      </div>
-      <div class="field">
-        <label>Password</label>
-        <input type="password" id="auth-pass" placeholder="••••••••"/>
-      </div>
-      <div class="err" id="auth-err" style="display:none;"></div>
-      <button class="btn btn-white" id="auth-submit-btn" style="width:100%;padding:12px;font-size:13px;" onclick="doAuth()">Sign In</button>
-      <div style="display:flex;align-items:center;gap:10px;margin:4px 0;">
+    <div class="mbody">
+      <div id="af-name" style="display:none;"><label class="fl">Full Name</label><input class="fi" id="a-name" placeholder="e.g. Uzoma Johnson"/></div>
+      <div><label class="fl">Email</label><input class="fi" id="a-email" type="email" placeholder="you@email.com"/></div>
+      <div><label class="fl">Password</label><input class="fi" id="a-pass" type="password" placeholder="••••••••"/></div>
+      <div class="err" id="a-err" style="display:none;"></div>
+      <button class="btn btn-w" id="a-btn" style="width:100%;padding:12px;font-size:13px;" onclick="doAuth()">Sign In</button>
+      <div style="display:flex;align-items:center;gap:10px;">
         <div style="flex:1;height:1px;background:var(--border);"></div>
-        <span style="font-size:11px;color:var(--dim);">or continue with</span>
+        <span style="font-size:11px;color:var(--dim);">or</span>
         <div style="flex:1;height:1px;background:var(--border);"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <button onclick="doAuth('google')" style="padding:10px;background:var(--card);border:1px solid var(--border);color:var(--white);
+        <button onclick="toast('Google login coming soon!')" style="padding:10px;background:var(--card);border:1px solid var(--border);color:var(--white);font-size:12px;font-weight:600;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:7px;">
+          <svg width="15" height="15" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C36.9 36.8 44 31 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>
+          Google
+        </button>
+        <button onclick="toast('Apple login coming soon!')" style="padding:10px;background:var(--card);border:1px solid var(--border);color:var(--white);font-size:12px;font-weight:600;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:7px;">
+          <svg width="15" height="15" viewBox="0 0 814 1000" fill="white"><path d
