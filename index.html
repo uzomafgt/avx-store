@@ -22,6 +22,46 @@
   --green:#4CAF7D;
   --dim:#5A5A62;
 }
+/* ── LIGHT THEME ── */
+body.light{
+  --bg:#F8F7F4;
+  --bg2:#EFEDE8;
+  --card:#FFFFFF;
+  --card2:#F0EEE9;
+  --border:#E2DED6;
+  --border2:#CCC8C0;
+  --white:#1A1814;
+  --white2:#4A4845;
+  --gold:#B8922A;
+  --gold2:#C9A84C;
+  --red:#D44;
+  --green:#2E8B57;
+  --dim:#9A9690;
+}
+body.light nav{
+  background:rgba(240,236,228,0.97);
+  border-bottom:1px solid rgba(200,190,175,.4);
+  backdrop-filter:blur(20px);
+}
+body.light .btn-gold{background:var(--gold);color:#fff;}
+body.light .nav-link{color:var(--dim);}
+body.light .nav-link:hover,body.light .nav-link.active{color:var(--white);}
+body.light .logo{color:#0C0C0E;}
+body.light .logo b{color:rgba(12,12,14,.5);}
+body.light .logo-dot{background:#0C0C0E;}
+body.light .nav-link{color:rgba(12,12,14,.6);}
+body.light .nav-link:hover,body.light .nav-link.active{color:#0C0C0E;}
+body.light .nav-link::after{background:#0C0C0E;}
+body.light #theme-toggle{background:rgba(0,0,0,.15);border-color:rgba(0,0,0,.2);color:#0C0C0E;}
+body.light .btn-outline{background:rgba(0,0,0,.1);color:#0C0C0E;border-color:rgba(0,0,0,.25);}
+body.light .btn-outline:hover{background:rgba(0,0,0,.18);}
+body.light .btn-gold{background:#0C0C0E;color:var(--gold2);}
+body.light .btn-gold:hover{background:#222;}
+body.light .user-btn{border-color:rgba(0,0,0,.2);color:#0C0C0E;}
+body.light .user-btn:hover{background:rgba(0,0,0,.1);}
+body.light .user-av{background:#0C0C0E;color:var(--gold2);}
+body.light .user-name{color:rgba(12,12,14,.7);}
+body.light .user-chevron{color:rgba(12,12,14,.5);}
 body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;}
 button,input,textarea,select{font-family:'Inter',sans-serif;}
 button{cursor:pointer;}
@@ -34,11 +74,16 @@ button{cursor:pointer;}
 /* ── NAV ── */
 nav{
   position:sticky;top:0;z-index:200;
-  background:rgba(12,12,14,0.95);
+  background:rgba(28,28,32,0.97);
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:62px;
+  padding:0 16px;height:60px;
   backdrop-filter:blur(20px);
+  gap:6px;width:100%;overflow:hidden;
+}
+.nav-right{
+  display:flex;align-items:center;
+  gap:6px;flex-shrink:0;
 }
 .logo{
   font-family:'Syne',sans-serif;
@@ -504,9 +549,10 @@ footer p{font-size:12px;color:var(--dim);}
 
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
-  nav{padding:0 16px;height:56px;}
-  .logo{font-size:15px;}
+  nav{padding:0 12px;height:56px;}
+  .logo{font-size:14px;}
   .nav-right .nav-link{display:none;}
+  .nav-sep{display:none;}
   .hero{grid-template-columns:1fr;gap:32px;padding:48px 16px 36px;}
   .hero-right{display:none;}
   .stats-wrap,.search-wrap,.sec{padding-left:16px;padding-right:16px;}
@@ -523,16 +569,25 @@ footer p{font-size:12px;color:var(--dim);}
 
 <!-- NAV -->
 <nav>
-  <div class="logo" onclick="goTo('home')">
-    <div class="logo-dot"></div>
-    AVX <span>STORE</span>
+  <div class="logo" onclick="goTo('home')" style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);flex-shrink:0;">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    <span style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:.02em;color:var(--white);white-space:nowrap;">AVX<span style="color:var(--gold);">STORE</span></span>
   </div>
   <div class="nav-right">
     <span class="nav-link" id="nl-browse" onclick="goTo('browse')">Browse</span>
     <span class="nav-link" id="nl-sellers" onclick="goTo('sellers')">Sellers</span>
+    <div style="width:1px;height:18px;background:var(--border);margin:0 2px;flex-shrink:0;" class="nav-sep"></div>
+    <button id="theme-toggle" onclick="toggleTheme()" style="background:var(--card);border:1px solid var(--border);border-radius:100px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;transition:all .25s;color:var(--white2);font-size:11px;font-weight:600;flex-shrink:0;white-space:nowrap;">
+      <span id="theme-icon" style="font-size:13px;">☀️</span>
+      <span id="theme-label">Light</span>
+    </button>
+    <span class="nav-link" id="nl-rewards" onclick="STATE.user?goTo('rewards'):openAuth('login')" style="color:var(--gold);">⭐ Rewards</span>
     <div id="auth-btns" style="display:flex;gap:8px;">
-      <button class="btn btn-outline" onclick="openAuth('login')">Login</button>
-      <button class="btn btn-gold" onclick="openAuth('signup')">Join Free</button>
+      <button class="btn btn-outline" onclick="openAuth('login')" style="white-space:nowrap;padding:7px 13px;font-size:12px;">Login</button>
+      <button class="btn btn-gold" onclick="openAuth('signup')" style="white-space:nowrap;padding:7px 13px;font-size:12px;">Join Free</button>
     </div>
     <div class="user-wrap" id="user-wrap" style="display:none;">
       <button class="btn btn-gold" onclick="openListModal()" style="margin-right:4px;font-size:12px;padding:8px 16px;">+ List Product</button>
@@ -574,25 +629,35 @@ footer p{font-size:12px;color:var(--dim);}
       </div>
     </div>
     <div class="hero-right">
-      <div class="hero-card tall">
-        <img src="https://picsum.photos/seed/hero1/300/400" alt=""/>
-        <div class="hero-card-info">
-          <div class="hero-card-name">Premium Fashion</div>
-          <div class="hero-card-price">₦45,000</div>
+      <!-- Points/Rewards Card -->
+      <div style="background:linear-gradient(135deg,#1a1408,#2a200a);border:1px solid rgba(201,168,76,.3);border-radius:20px;padding:28px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:18px;">⭐</span>
+          <span style="font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Your Rewards Balance</span>
         </div>
+        <div style="font-family:'Syne',sans-serif;font-size:38px;font-weight:800;color:var(--white);margin-bottom:4px;" id="hero-points">0 Points</div>
+        <div style="font-size:13px;color:var(--white2);" id="hero-pts-eq">Earn points by buying & selling</div>
       </div>
-      <div class="hero-card">
-        <img src="https://picsum.photos/seed/hero2/300/200" alt=""/>
-        <div class="hero-card-info">
-          <div class="hero-card-name">Electronics</div>
-          <div class="hero-card-price">₦22,000</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;">
+          <div style="font-size:20px;margin-bottom:8px;">🛍️</div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:3px;">Buy & Earn</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.4;">10pts per ₦1,000 spent</div>
         </div>
-      </div>
-      <div class="hero-card">
-        <img src="https://picsum.photos/seed/hero3/300/200" alt=""/>
-        <div class="hero-card-info">
-          <div class="hero-card-name">Beauty</div>
-          <div class="hero-card-price">₦12,500</div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;">
+          <div style="font-size:20px;margin-bottom:8px;">📦</div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:3px;">Sell & Earn</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.4;">20pts per product sold</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;">
+          <div style="font-size:20px;margin-bottom:8px;">🎁</div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:3px;">Redeem</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.4;">Airtime, data & gifts</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;">
+          <div style="font-size:20px;margin-bottom:8px;">🏆</div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:3px;">Top Seller</div>
+          <div style="font-size:11px;color:var(--dim);line-height:1.4;">Bonus pts monthly</div>
         </div>
       </div>
     </div>
@@ -606,7 +671,7 @@ footer p{font-size:12px;color:var(--dim);}
   <!-- STATS -->
   <div class="stats-wrap">
     <div class="stats">
-      <div class="stat"><span class="stat-n">₦<span style="color:var(--white)">2.4</span>B+</span><span class="stat-l">Total Sales Volume</span></div>
+      <div class="stat"><span class="stat-n"><span style="color:var(--white)">Free</span></span><span class="stat-l">To Join & Sell</span></div>
       <div class="stat"><span class="stat-n" id="s-products"><span style="color:var(--white)">0</span></span><span class="stat-l">Products Listed</span></div>
       <div class="stat"><span class="stat-n" id="s-sellers"><span style="color:var(--white)">0</span></span><span class="stat-l">Active Sellers</span></div>
     </div>
@@ -668,51 +733,111 @@ footer p{font-size:12px;color:var(--dim);}
   </div>
 </div>
 
+<!-- REWARDS PAGE -->
+<div id="pg-rewards" class="pg">
+  <div style="max-width:900px;margin:0 auto;padding:32px 24px;">
+
+    <!-- REWARDS HEADER BANNER -->
+    <div style="background:linear-gradient(135deg,#1a1200,#2d2000);border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-20px;right:-20px;width:150px;height:150px;background:radial-gradient(circle,rgba(201,168,76,.15),transparent);border-radius:50%;"></div>
+      <div style="font-size:11px;color:var(--gold);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">AVX REWARDS</div>
+      <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:4px;">Your Balance</div>
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
+        <div id="rw-points" style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--gold);">0</div>
+        <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--white2);">Points</div>
+      </div>
+      <div id="rw-equiv" style="font-size:14px;color:var(--white2);">Equivalent to <span style="color:var(--gold);font-weight:700;">₦0.00</span></div>
+      <div style="margin-top:20px;display:flex;gap:10px;">
+        <div style="background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--gold);">⭐ 10pts per purchase</div>
+        <div style="background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--gold);">📦 20pts per listing</div>
+      </div>
+    </div>
+
+    <!-- HOW TO EARN -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;">
+      <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:16px;">How to Earn Points</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+        ${[
+          ['📦','List a Product','Earn 20 pts every time you list a new product'],
+          ['🛒','Make a Purchase','Earn 10 pts for every purchase you make'],
+          ['⭐','Leave a Review','Earn 5 pts for every product review'],
+          ['👥','Refer a Friend','Earn 50 pts when a friend signs up'],
+        ].map(([icon,title,desc])=>`
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">
+            <div style="font-size:28px;margin-bottom:8px;">${icon}</div>
+            <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px;">${title}</div>
+            <div style="font-size:12px;color:var(--dim);line-height:1.5;">${desc}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- REDEEM SECTION -->
+    <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:8px;">Redeem Points</div>
+    <div style="font-size:13px;color:var(--dim);margin-bottom:16px;">Select your preferred reward to redeem using your accrued points.</div>
+
+    <!-- REDEEM TABS -->
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;">
+      <button onclick="setRedeemTab('airtime')" id="rt-airtime" style="padding:10px 20px;border-radius:100px;background:var(--gold);color:var(--bg);border:none;font-size:13px;font-weight:700;cursor:pointer;">📱 Airtime & Data</button>
+      <button onclick="setRedeemTab('items')" id="rt-items" style="padding:10px 20px;border-radius:100px;background:var(--card);color:var(--white2);border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;">🎁 Physical Items</button>
+      <button onclick="setRedeemTab('cash')" id="rt-cash" style="padding:10px 20px;border-radius:100px;background:var(--card);color:var(--white2);border:1px solid var(--border);font-size:13px;font-weight:600;cursor:pointer;">💵 Cash Out</button>
+    </div>
+
+    <!-- REDEEM CONTENT -->
+    <div id="redeem-content"></div>
+  </div>
+</div>
+
 <footer>
-  <div class="footer-logo"><div class="logo-dot"></div>AVX <span style="color:var(--white2)">STORE</span></div>
+  <div class="footer-logo" style="display:flex;align-items:center;gap:8px;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--gold);">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    AVX<span style="color:var(--gold);">STORE</span>
+  </div>
   <p>Open marketplace. Built different. © 2025</p>
 </footer>
 
 <!-- AUTH MODAL -->
 <div class="overlay" id="auth-modal" onclick="if(event.target===this)closeM('auth-modal')">
-  <div class="modal" style="max-width:440px;">
-    <div class="mhead">
-      <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;">AVX <span style="color:var(--gold)">STORE</span></div>
+  <div class="modal" style="max-width:420px;">
+    <div class="mhead" style="border-bottom:none;padding-bottom:8px;">
+      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;">AVX <span style="color:var(--gold);">STORE</span></div>
       <button class="mclose" onclick="closeM('auth-modal')">✕</button>
     </div>
-    <div class="atabs">
+    <div class="atabs" style="margin:0 28px;">
       <div class="atab on" id="at-login" onclick="switchTab('login')">Login</div>
       <div class="atab" id="at-signup" onclick="switchTab('signup')">Sign Up</div>
     </div>
-    <div class="mbody">
+    <div class="mbody" style="gap:12px;">
+      <!-- SOCIAL FIRST - full width -->
+      <button class="social-btn" style="width:100%;padding:14px;font-size:14px;font-weight:700;border-radius:10px;gap:10px;" onclick="window.doGoogleLogin?doGoogleLogin():toast('Loading...')">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C36.9 36.8 44 31 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>
+        Continue with Google
+      </button>
+      <button class="social-btn" style="width:100%;padding:14px;font-size:14px;font-weight:700;border-radius:10px;gap:10px;" onclick="window.doAppleLogin?doAppleLogin():toast('Loading...')">
+        <svg width="18" height="18" viewBox="0 0 814 1000" fill="white"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 376.7 0 248.3 0 124.8c0-70.3 24.5-135.1 68.5-181.4C112.6 97.3 155.5 75 227.5 75c69.4 0 121.8 42.1 164 42.1 40.8 0 99.9-44.9 181.9-44.9 29.4 0 108.2 2.6 163.9 96.8zm-87.1-211.4c-36.3 42.1-97.5 74.8-157.8 74.8-6.5 0-13-.6-19.4-1.9 1.3-55.5 38.3-113.2 78.3-149.1 42.1-38.3 103.7-67 162.6-67 1.9 0 3.9 0 5.8.6-1.9 58.5-37 115.8-69.5 142.6z"/></svg>
+        Continue with Apple
+      </button>
+      <div class="divider"><span>or use email</span></div>
+      <!-- EMAIL FORM -->
       <div id="af-name" style="display:none;">
         <label class="fl">Full Name</label>
-        <input class="fi" id="a-name" placeholder="e.g. Uzoma Okeke"/>
+        <input class="fi" id="a-name" placeholder="e.g. Uzoma Okeke" style="border-radius:10px;padding:14px 16px;"/>
       </div>
       <div>
         <label class="fl">Email Address</label>
-        <input class="fi" id="a-email" type="email" placeholder="you@email.com"/>
+        <input class="fi" id="a-email" type="email" placeholder="you@email.com" style="border-radius:10px;padding:14px 16px;"/>
       </div>
       <div>
         <label class="fl">Password</label>
-        <input class="fi" id="a-pass" type="password" placeholder="Min. 6 characters"/>
+        <input class="fi" id="a-pass" type="password" placeholder="Min. 6 characters" style="border-radius:10px;padding:14px 16px;"/>
       </div>
       <div class="err" id="a-err" style="display:none;"></div>
-      <button class="btn btn-gold" id="a-btn" style="width:100%;padding:14px;font-size:14px;" onclick="doAuth()">Sign In</button>
-      <div class="divider"><span>or continue with</span></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <button class="social-btn" onclick="window.doGoogleLogin?doGoogleLogin():toast('Loading...')">
-          <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C36.9 36.8 44 31 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>
-          Google
-        </button>
-        <button class="social-btn" onclick="window.doAppleLogin?doAppleLogin():toast('Loading...')">
-          <svg width="16" height="16" viewBox="0 0 814 1000" fill="white"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 376.7 0 248.3 0 124.8c0-70.3 24.5-135.1 68.5-181.4C112.6 97.3 155.5 75 227.5 75c69.4 0 121.8 42.1 164 42.1 40.8 0 99.9-44.9 181.9-44.9 29.4 0 108.2 2.6 163.9 96.8zm-87.1-211.4c-36.3 42.1-97.5 74.8-157.8 74.8-6.5 0-13-.6-19.4-1.9 1.3-55.5 38.3-113.2 78.3-149.1 42.1-38.3 103.7-67 162.6-67 1.9 0 3.9 0 5.8.6-1.9 58.5-37 115.8-69.5 142.6z"/></svg>
-          Apple
-        </button>
-      </div>
-      <div style="text-align:center;font-size:13px;color:var(--dim);">
+      <button class="btn btn-gold" id="a-btn" style="width:100%;padding:14px;font-size:14px;border-radius:10px;" onclick="doAuth()">Sign In</button>
+      <div style="text-align:center;font-size:13px;color:var(--dim);padding-bottom:4px;">
         <span id="a-sw-txt">No account? </span>
-        <span id="a-sw-lnk" style="color:var(--gold);cursor:pointer;font-weight:600;" onclick="switchTab(STATE.authTab==='login'?'signup':'login')">Sign up free</span>
+        <span id="a-sw-lnk" style="color:var(--gold);cursor:pointer;font-weight:700;" onclick="switchTab(STATE.authTab==='login'?'signup':'login')">Sign up free</span>
       </div>
     </div>
   </div>
@@ -884,13 +1009,13 @@ function showAuthNav(){
 function openAuth(tab){switchTab(tab);openM('auth-modal');}
 function switchTab(tab){
   STATE.authTab=tab;
-  document.getElementById('at-login').classList.toggle('on',tab==='login');
-  document.getElementById('at-signup').classList.toggle('on',tab==='signup');
   document.getElementById('af-name').style.display=tab==='signup'?'block':'none';
-  document.getElementById('a-btn').textContent=tab==='signup'?'Create Free Account':'Sign In';
+  document.getElementById('a-btn').textContent='Continue';
   document.getElementById('a-sw-txt').textContent=tab==='login'?'No account? ':'Already have one? ';
   document.getElementById('a-sw-lnk').textContent=tab==='login'?'Sign up free':'Sign in';
   document.getElementById('a-err').style.display='none';
+  document.getElementById('auth-title').textContent=tab==='login'?'Log in':'Sign up';
+  document.getElementById('auth-sub').textContent=tab==='login'?'Welcome back to AVX STORE':'Join AVX STORE for free';
 }
 function doAuth(){
   const name=document.getElementById('a-name').value.trim();
@@ -1057,7 +1182,8 @@ function submitReview(){
   STATE.currentProduct.reviews.push({user:STATE.user.name,rating:STATE.reviewRating,comment:text});
   renderReviews(STATE.currentProduct.reviews);
   document.getElementById('rv-text').value='';
-  toast('Review posted! 🔥');
+  addPoints(5);
+  toast('Review posted! +5 pts 🔥');
 }
 
 // ═══════════════════════════
@@ -1132,7 +1258,7 @@ function goPayForm(){if(!STATE.selectedPay){toast('Select a payment method!');re
 function processPay(){
   const btn=document.getElementById('pay-btn');
   if(btn){btn.textContent='Processing…';btn.disabled=true;}
-  setTimeout(()=>renderPayStep('success'),2000);
+  setTimeout(()=>{renderPayStep('success');addPoints(10);},2000);
 }
 
 // ═══════════════════════════
@@ -1180,7 +1306,8 @@ function submitProduct(){
   }
   renderHome();
   closeM('list-modal');
-  toast('Product listed! 🔥');
+  addPoints(20);
+  toast('Product listed! +20 pts 🔥');
   document.getElementById('p-name').value='';
   document.getElementById('p-price').value='';
   document.getElementById('p-desc').value='';
@@ -1196,6 +1323,133 @@ function buildMarquee(){
   const doubled=[...items,...items].map(i=>`<div class="marquee-item"><div class="marquee-sep">✦</div><b>${i}</b></div>`).join('');
   document.getElementById('marquee').innerHTML=doubled;
 }
+
+// ═══════════════════════════
+// REWARDS
+// ═══════════════════════════
+const REWARDS_RATE = 0.01; // 1 point = ₦0.01
+
+function getPoints(){
+  return STATE.user ? (STATE.user.points||0) : 0;
+}
+function addPoints(n){
+  if(!STATE.user) return;
+  STATE.user.points = (STATE.user.points||0) + n;
+  updateRewardsBadge();
+}
+function updateRewardsBadge(){
+  const pts = getPoints();
+  const el = document.getElementById('rw-points');
+  const eq = document.getElementById('rw-equiv');
+  if(el) el.textContent = pts.toLocaleString();
+  if(eq) eq.innerHTML = `Equivalent to <span style="color:var(--gold);font-weight:700;">₦${(pts*REWARDS_RATE).toFixed(2)}</span>`;
+}
+
+const REDEEM_ITEMS = {
+  airtime:[
+    {icon:'📱',name:'MTN Airtime ₦100',pts:500,avail:999},
+    {icon:'📡',name:'Glo 1GB Data',pts:1000,avail:450},
+    {icon:'📲',name:'Airtel 2GB Data',pts:1800,avail:230},
+    {icon:'🔵',name:'9mobile 500MB',pts:800,avail:320},
+  ],
+  items:[
+    {icon:'👜',name:'Tote Bag',pts:9000,avail:196},
+    {icon:'🎒',name:'Lunch Bag',pts:25000,avail:238},
+    {icon:'📱',name:'Phone Stand',pts:3000,avail:774},
+    {icon:'🧴',name:'AVX Branded Bottle',pts:5000,avail:452},
+  ],
+  cash:[
+    {icon:'💵',name:'₦500 Bank Transfer',pts:5000,avail:999},
+    {icon:'💴',name:'₦1,000 Bank Transfer',pts:9500,avail:999},
+    {icon:'💶',name:'₦2,500 Bank Transfer',pts:23000,avail:999},
+    {icon:'💷',name:'₦5,000 Bank Transfer',pts:45000,avail:999},
+  ]
+};
+
+let activeRedeemTab = 'airtime';
+function setRedeemTab(tab){
+  activeRedeemTab = tab;
+  ['airtime','items','cash'].forEach(t=>{
+    const btn = document.getElementById('rt-'+t);
+    if(btn){
+      btn.style.background = t===tab ? 'var(--gold)' : 'var(--card)';
+      btn.style.color = t===tab ? 'var(--bg)' : 'var(--white2)';
+      btn.style.border = t===tab ? 'none' : '1px solid var(--border)';
+    }
+  });
+  renderRedeemContent();
+}
+function renderRedeemContent(){
+  const items = REDEEM_ITEMS[activeRedeemTab]||[];
+  const pts = getPoints();
+  document.getElementById('redeem-content').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;">
+      ${items.map(item=>{
+        const canAfford = pts >= item.pts;
+        return `<div style="background:var(--card);border:1px solid ${canAfford?'var(--border2)':'var(--border)'};border-radius:12px;padding:20px;transition:all .2s;${canAfford?'':'opacity:.6;'}">
+          <div style="font-size:36px;margin-bottom:10px;">${item.icon}</div>
+          <div style="font-size:10px;color:var(--green);font-weight:600;letter-spacing:.06em;margin-bottom:6px;">Available: ${item.avail}</div>
+          <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.3;">${item.name}</div>
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:14px;">
+            <span style="color:var(--gold);">⭐</span>
+            <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold);">${item.pts.toLocaleString()} pts</span>
+          </div>
+          <button onclick="redeemItem('${item.name}',${item.pts})" style="width:100%;padding:9px;border-radius:8px;border:none;background:${canAfford?'var(--gold)':'var(--border)'};color:${canAfford?'var(--bg)':'var(--dim)'};font-size:12px;font-weight:700;cursor:${canAfford?'pointer':'not-allowed'};">${canAfford?'Redeem':'Need '+item.pts.toLocaleString()+' pts'}</button>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+function redeemItem(name, pts){
+  if(getPoints() < pts){ toast('Not enough points!'); return; }
+  STATE.user.points -= pts;
+  updateRewardsBadge();
+  renderRedeemContent();
+  toast('Redeemed: '+name+' 🎉');
+}
+
+// Override goTo to handle rewards page
+const _origGoTo = goTo;
+window.goTo = function(pg){
+  if(pg==='rewards'){
+    if(!STATE.user){ openAuth('login'); return; }
+    document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+    document.getElementById('pg-rewards').classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+    const nl=document.getElementById('nl-rewards');
+    if(nl) nl.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    updateRewardsBadge();
+    renderRedeemContent();
+    return;
+  }
+  _origGoTo(pg);
+};
+
+// Award points when product is listed
+const _origSubmit = window.submitProduct;
+
+// ═══════════════════════════
+// THEME
+// ═══════════════════════════
+function toggleTheme(){
+  const isLight = document.body.classList.toggle('light');
+  document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
+  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
+  localStorage.setItem('avx-theme', isLight ? 'light' : 'dark');
+}
+// Apply saved theme on load
+(function(){
+  const saved = localStorage.getItem('avx-theme');
+  if(saved === 'light'){
+    document.body.classList.add('light');
+    setTimeout(()=>{
+      const icon = document.getElementById('theme-icon');
+      const label = document.getElementById('theme-label');
+      if(icon) icon.textContent = '🌙';
+      if(label) label.textContent = 'Dark';
+    }, 0);
+  }
+})();
 
 // ═══════════════════════════
 // INIT
