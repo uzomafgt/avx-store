@@ -347,7 +347,7 @@ footer p{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);lett
         </div>
       </div>
       <div><label class="fl">Description</label><textarea class="fi" id="p-desc" placeholder="Tell buyers about your product…"></textarea></div>
-      <div><label class="fl">Seller Handle</label><input class="fi" id="p-seller" placeholder="e.g. UliFinds"/></div>
+      <div><label class="fl">Seller Handle <span style="color:var(--dim);font-size:10px;">(auto-filled from your account)</span></label><input class="fi" id="p-seller" placeholder="e.g. UliFinds"/></div>
       <div>
         <label class="fl">Product Image</label>
         <div class="dzone" id="dzone">
@@ -431,25 +431,9 @@ const STATE = {
 
 const CATS = ['all','fashion','electronics','beauty','food','art','other'];
 
-const PRODUCTS = [
-  {id:'p1',name:'Handcrafted Agbada Set',price:45000,cat:'fashion',seller:'LagosKraft',desc:'Premium handwoven Agbada, all sizes.',img:'https://picsum.photos/seed/agbada/400/400',badge:'New',reviews:[{user:'Tunde',rating:5,comment:'Absolutely fire! Quality is top notch.'},{user:'Amaka',rating:4,comment:'Very good material.'}]},
-  {id:'p2',name:'Vintage Polaroid Camera',price:22000,cat:'electronics',seller:'RetroHub',desc:'Fully functional, comes with film.',img:'https://picsum.photos/seed/camera/400/400',badge:'Hot',reviews:[{user:'Chidi',rating:5,comment:'Works perfectly!'}]},
-  {id:'p3',name:'24K Gold Face Serum',price:12500,cat:'beauty',seller:'GlowNG',desc:'Brightening serum, locally made.',img:'https://picsum.photos/seed/serum/400/400',badge:null,reviews:[]},
-  {id:'p4',name:'Suya Spice Pack 1kg',price:3500,cat:'food',seller:'AbujaTaste',desc:'Original Northern suya spice blend.',img:'https://picsum.photos/seed/spice/400/400',badge:'Popular',reviews:[{user:'Emeka',rating:5,comment:'Best suya spice ever!'},{user:'Fatima',rating:5,comment:'My family loves this.'}]},
-  {id:'p5',name:'Abstract Oil Painting',price:80000,cat:'art',seller:'ArtByTayo',desc:'One-of-a-kind, 60×80cm canvas.',img:'https://picsum.photos/seed/painting/400/400',badge:null,reviews:[{user:'Ngozi',rating:4,comment:'Beautiful piece!'}]},
-  {id:'p6',name:'Ankara Mini Dress',price:18000,cat:'fashion',seller:'FabricCo',desc:'Bold prints, tailored fit.',img:'https://picsum.photos/seed/dress/400/400',badge:'New',reviews:[]},
-  {id:'p7',name:'Wireless Earbuds Pro',price:35000,cat:'electronics',seller:'TechAbuja',desc:'ANC, 30hr battery, USB-C.',img:'https://picsum.photos/seed/earbuds/400/400',badge:null,reviews:[{user:'Seun',rating:4,comment:'Great sound quality.'}]},
-  {id:'p8',name:'Natural Shea Butter',price:2800,cat:'beauty',seller:'GlowNG',desc:'Unrefined, 100% organic, 500g jar.',img:'https://picsum.photos/seed/shea/400/400',badge:null,reviews:[]},
-];
-
-const SELLERS = [
-  {handle:'LagosKraft',products:12,rating:'4.9',initial:'LK'},
-  {handle:'RetroHub',products:8,rating:'4.7',initial:'RH'},
-  {handle:'GlowNG',products:21,rating:'4.8',initial:'GN'},
-  {handle:'AbujaTaste',products:6,rating:'5.0',initial:'AT'},
-  {handle:'ArtByTayo',products:4,rating:'4.9',initial:'AB'},
-  {handle:'FabricCo',products:15,rating:'4.6',initial:'FC'},
-];
+// Real data only — loaded from Firebase
+const PRODUCTS = [];
+const SELLERS = [];
 
 // ═══════════════════════════════════════
 // HELPERS
@@ -559,6 +543,9 @@ function doLogout(){
 }
 function openListModal(){
   if(!STATE.user){openAuth('signup');return;}
+  // Auto-fill seller handle from logged in user
+  const sellerInput = document.getElementById('p-seller');
+  if(sellerInput && STATE.user) sellerInput.value = STATE.user.name;
   openM('list-modal');
 }
 
@@ -601,16 +588,26 @@ function renderHome(){
   const list=PRODUCTS.filter(p=>(STATE.activeCat==='all'||p.cat===STATE.activeCat)&&(!q||p.name.toLowerCase().includes(q)||p.seller.toLowerCase().includes(q)));
   renderChips('h-chips',STATE.activeCat,'setCat');
   document.getElementById('h-count').textContent=list.length+' products';
-  document.getElementById('h-grid').innerHTML=list.length?list.map(cardHTML).join(''):'<div class="empty">NO PRODUCTS FOUND</div>';
+  const emptyHTML = STATE.user 
+  ? '<div class="empty" style="grid-column:1/-1;padding:60px 20px;text-align:center;"><div style="font-size:40px;margin-bottom:16px;">🛍️</div><div style="font-family:Space Mono,monospace;font-size:12px;color:var(--dim);letter-spacing:.1em;margin-bottom:12px;">NO PRODUCTS YET</div><div style="font-size:13px;color:var(--dim);margin-bottom:20px;">Be the first seller on AVX STORE!</div><button class="btn btn-w" onclick="openListModal()">List Your First Product</button></div>'
+  : '<div class="empty" style="grid-column:1/-1;padding:60px 20px;text-align:center;"><div style="font-size:40px;margin-bottom:16px;">🛍️</div><div style="font-family:Space Mono,monospace;font-size:12px;color:var(--dim);letter-spacing:.1em;margin-bottom:12px;">NO PRODUCTS YET</div><div style="font-size:13px;color:var(--dim);margin-bottom:20px;">Be the first seller on AVX STORE!</div><button class="btn btn-w" onclick="openAuth('signup')">Sign Up & Start Selling</button></div>';
+document.getElementById('h-grid').innerHTML=list.length?list.map(cardHTML).join(''):emptyHTML;
   document.getElementById('s-products').textContent=PRODUCTS.length;
-  document.getElementById('s-sellers').textContent=SELLERS.length;
-  document.getElementById('h-sellers').innerHTML=SELLERS.map(s=>`
+  const uniqueSellers = new Set(PRODUCTS.map(p=>p.seller)).size;
+  document.getElementById('s-sellers').textContent=uniqueSellers;
+  // Build sellers from real products
+  const sellerMap = {};
+  PRODUCTS.forEach(p => {
+    if(!sellerMap[p.seller]) sellerMap[p.seller] = {handle:p.seller, count:0, initial:p.seller[0].toUpperCase()};
+    sellerMap[p.seller].count++;
+  });
+  const realSellers = Object.values(sellerMap);
+  document.getElementById('h-sellers').innerHTML = realSellers.length ? realSellers.map(s=>`
     <div class="scard" onclick="filterBySeller('${s.handle}')">
       <div class="sav">${s.initial}</div>
       <div class="sname">@${s.handle}</div>
-      <div class="smeta">${s.products} products</div>
-      <div class="srating">★ ${s.rating}</div>
-    </div>`).join('');
+      <div class="smeta">${s.count} product${s.count!==1?'s':''}</div>
+    </div>`).join('') : '<div style="padding:20px;color:var(--dim);font-size:13px;">No sellers yet — be the first!</div>';
 }
 
 // ═══════════════════════════════════════
@@ -622,7 +619,7 @@ function renderBrowse(){
   const list=PRODUCTS.filter(p=>(STATE.browseCat==='all'||p.cat===STATE.browseCat)&&(!q||p.name.toLowerCase().includes(q)||p.seller.toLowerCase().includes(q)));
   renderChips('b-chips',STATE.browseCat,'setBrowseCat');
   document.getElementById('b-count').textContent=list.length+' PRODUCTS';
-  document.getElementById('b-grid').innerHTML=list.length?list.map(cardHTML).join(''):'<div class="empty">NO PRODUCTS FOUND</div>';
+  document.getElementById('b-grid').innerHTML=list.length?list.map(cardHTML).join(''):'<div class="empty">NO PRODUCTS LISTED YET</div>';
 }
 function filterBySeller(handle){
   STATE.browseCat='all';
@@ -634,14 +631,23 @@ function filterBySeller(handle){
 // SELLERS PAGE
 // ═══════════════════════════════════════
 function renderSellers(){
-  document.getElementById('sg').innerHTML=SELLERS.map(s=>`
-    <div class="sgcard">
+  const sellerMap = {};
+  PRODUCTS.forEach(p => {
+    if(!sellerMap[p.seller]) sellerMap[p.seller] = {handle:p.seller, count:0, initial:p.seller[0].toUpperCase(), reviews:[]};
+    sellerMap[p.seller].count++;
+    p.reviews.forEach(r => sellerMap[p.seller].reviews.push(r));
+  });
+  const realSellers = Object.values(sellerMap);
+  document.getElementById('sg').innerHTML = realSellers.length ? realSellers.map(s => {
+    const a = s.reviews.length ? (s.reviews.reduce((x,r)=>x+r.rating,0)/s.reviews.length).toFixed(1) : null;
+    return `<div class="sgcard">
       <div class="sav" style="width:46px;height:46px;font-size:15px;margin-bottom:12px;">${s.initial}</div>
       <div style="font-weight:700;font-size:14px;margin-bottom:3px;">@${s.handle}</div>
-      <div style="font-size:12px;color:var(--dim);margin-bottom:8px;">${s.products} products</div>
-      <div style="font-size:12px;color:var(--gold);">${stars(s.rating,12)} ${s.rating}</div>
+      <div style="font-size:12px;color:var(--dim);margin-bottom:8px;">${s.count} product${s.count!==1?'s':''}</div>
+      ${a?`<div style="font-size:12px;color:var(--gold);">${stars(a,12)} ${a}</div>`:''}
       <button class="btn btn-g" style="width:100%;margin-top:14px;font-size:11px;" onclick="filterBySeller('${s.handle}')">View Products →</button>
-    </div>`).join('');
+    </div>`;
+  }).join('') : '<div style="padding:40px;color:var(--dim);font-size:13px;text-align:center;grid-column:1/-1;">No sellers yet — be the first to sign up and list!</div>';
 }
 
 // ═══════════════════════════════════════
@@ -924,43 +930,76 @@ onAuthStateChanged(auth, u => {
   }
 });
 
-// Load real products from Firestore
+// ── LOAD REAL PRODUCTS FROM FIRESTORE ──
 try {
-  const q = query(collection(db,'products'), orderBy('createdAt','desc'));
-  onSnapshot(q, snap => {
+  const pq = query(collection(db,'products'), orderBy('createdAt','desc'));
+  onSnapshot(pq, snap => {
+    PRODUCTS.length = 0;
     snap.docs.forEach(d => {
-      const p={id:d.id,...d.data(),reviews:d.data().reviews||[]};
-      if(!PRODUCTS.find(x=>x.id===p.id)) PRODUCTS.unshift(p);
+      PRODUCTS.push({id:d.id, ...d.data(), reviews:d.data().reviews||[]});
     });
+    document.getElementById('s-products').textContent = PRODUCTS.length;
     renderHome();
     if(document.getElementById('pg-browse').classList.contains('active')) renderBrowse();
   }, ()=>{});
 } catch(e){}
 
-// Override submitProduct to also save to Firestore
-const origSubmit = window.submitProduct;
+// ── LOAD REAL SELLERS FROM FIRESTORE ──
+try {
+  const sq = query(collection(db,'sellers'), orderBy('createdAt','desc'));
+  onSnapshot(sq, snap => {
+    SELLERS.length = 0;
+    snap.docs.forEach(d => {
+      const s = d.data();
+      SELLERS.push({
+        handle: s.handle || s.name,
+        name: s.name,
+        products: PRODUCTS.filter(p => p.uid === s.uid).length,
+        rating: s.rating || '5.0',
+        initial: s.name ? s.name[0].toUpperCase() : '?',
+        uid: s.uid,
+        email: s.email,
+      });
+    });
+    document.getElementById('s-sellers').textContent = SELLERS.length;
+    renderHome();
+    if(document.getElementById('pg-sellers').classList.contains('active')) renderSellers();
+  }, ()=>{});
+} catch(e){}
+
+// ── SUBMIT PRODUCT — use real logged-in user as seller ──
 window.submitProduct = async () => {
+  if(!STATE.user){ toast('Login first to list a product!'); return; }
   const name=document.getElementById('p-name').value.trim();
   const price=document.getElementById('p-price').value;
   const cat=document.getElementById('p-cat').value;
   const desc=document.getElementById('p-desc').value.trim();
-  const seller=document.getElementById('p-seller').value.trim()||(STATE.user?.name||'Anonymous');
   const errEl=document.getElementById('p-err');
   if(!name||!price){errEl.textContent='Enter product name and price!';errEl.style.display='block';return;}
   errEl.style.display='none';
-  const product={name,price:Number(price),cat,desc:desc||'No description.',seller,img:STATE.uploadedImg||`https://picsum.photos/seed/${Date.now()}/400/400`,badge:'New',reviews:[],createdAt:new Date(),uid:STATE.user?.uid||'guest'};
-  try{ await addDoc(collection(db,'products'),product); }
-  catch(e){
+  const product={
+    name, price:Number(price), cat,
+    desc:desc||'No description.',
+    seller: STATE.user.name,
+    sellerHandle: STATE.user.name.replace(/\s/g,'').toLowerCase(),
+    uid: STATE.user.uid,
+    email: STATE.user.email,
+    img: STATE.uploadedImg||`https://picsum.photos/seed/${Date.now()}/400/400`,
+    badge:'New', reviews:[], createdAt:new Date()
+  };
+  try {
+    await addDoc(collection(db,'products'), product);
+    toast('Product listed! 🔥');
+  } catch(e){
     product.id='u'+Date.now();
     PRODUCTS.unshift(product);
     renderHome();
+    toast('Product listed! 🔥');
   }
   closeM('list-modal');
-  toast('Product listed! 🔥');
   document.getElementById('p-name').value='';
   document.getElementById('p-price').value='';
   document.getElementById('p-desc').value='';
-  document.getElementById('p-seller').value='';
   document.getElementById('dzone-prev').innerHTML='<div style="font-size:28px;margin-bottom:6px;">📦</div><p><strong>Click to upload</strong> image</p>';
   STATE.uploadedImg=null;
 };
