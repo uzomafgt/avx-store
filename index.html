@@ -1100,7 +1100,11 @@ function doAuth(){
   toast('Welcome'+(STATE.authTab==='signup'?', '+STATE.user.name.split(' ')[0]:'back')+'! 🔥');
 }
 function doLogout(){STATE.user=null;showAuthNav();closeDD();toast('Logged out!');}
-function openListModal(){if(!STATE.user){openAuth('signup');return;}openM('list-modal');}
+function openListModal(){
+  if(!STATE.user){openAuth('signup');return;}
+  if(STATE.user.emailVerified===false){toast('Verify your email first! Check the banner above 📧');return;}
+  openM('list-modal');
+}
 
 // ═══════════════════════════
 // CHIPS
