@@ -62,6 +62,64 @@ body.light .user-btn:hover{background:rgba(0,0,0,.1);}
 body.light .user-av{background:#0C0C0E;color:var(--gold2);}
 body.light .user-name{color:rgba(12,12,14,.7);}
 body.light .user-chevron{color:rgba(12,12,14,.5);}
+
+/* ── MARKET DAY THEME (warm terracotta) ── */
+body.market{
+  --bg:#1C1410;
+  --bg2:#241A14;
+  --card:#2C211A;
+  --card2:#352720;
+  --border:#46342A;
+  --border2:#5C4536;
+  --white:#FDF6EE;
+  --white2:#D4B8A0;
+  --gold:#E8743D;
+  --gold2:#F4946A;
+  --red:#E0524F;
+  --green:#6FAA6B;
+  --dim:#8A6E5C;
+}
+body.market nav{background:rgba(36,26,20,0.97);border-bottom:1px solid rgba(70,52,42,.6);}
+body.market .logo{color:var(--white);}
+body.market .logo-dot{background:var(--gold);}
+body.market .btn-gold{background:var(--gold);color:#1C1410;}
+body.market .btn-gold:hover{background:var(--gold2);}
+body.market .user-av{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1C1410;}
+body.market .sav{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1C1410;}
+
+/* ── LAGOS BLUE THEME (navy/cyan) ── */
+body.lagos{
+  --bg:#070D14;
+  --bg2:#0C141E;
+  --card:#101B28;
+  --card2:#152332;
+  --border:#1F3142;
+  --border2:#2A4256;
+  --white:#EAF4FA;
+  --white2:#8FAFC4;
+  --gold:#3DC9E8;
+  --gold2:#6BDCF2;
+  --red:#E0524F;
+  --green:#4CC9A0;
+  --dim:#4F6B7E;
+}
+body.lagos nav{background:rgba(12,20,30,0.97);border-bottom:1px solid rgba(31,49,66,.6);}
+body.lagos .logo{color:var(--white);}
+body.lagos .logo-dot{background:var(--gold);}
+body.lagos .btn-gold{background:var(--gold);color:#070D14;}
+body.lagos .btn-gold:hover{background:var(--gold2);}
+body.lagos .user-av{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#070D14;}
+body.lagos .sav{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#070D14;}
+body.lagos .hero h1 em{background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ── THEME PICKER ── */
+.theme-picker{position:relative;}
+.theme-dd{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--card2);border:1px solid var(--border2);border-radius:12px;min-width:180px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.5);z-index:50;}
+.theme-dd.open{display:block;animation:fadeDown .2s ease;}
+.theme-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;font-size:13px;font-weight:500;cursor:pointer;transition:background .15s;color:var(--white2);}
+.theme-opt:hover{background:var(--card);}
+.theme-opt.active{color:var(--white);font-weight:700;}
+.theme-swatch{width:16px;height:16px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.15);}
 body{background:var(--bg);color:var(--white);font-family:'Inter',sans-serif;min-height:100vh;font-size:15px;-webkit-font-smoothing:antialiased;}
 button,input,textarea,select{font-family:'Inter',sans-serif;}
 button{cursor:pointer;}
@@ -584,10 +642,27 @@ footer p{font-size:12px;color:var(--dim);}
     <span class="nav-link" id="nl-browse" onclick="goTo('browse')">Browse</span>
     <span class="nav-link" id="nl-sellers" onclick="goTo('sellers')">Sellers</span>
     <div style="width:1px;height:18px;background:var(--border);margin:0 2px;flex-shrink:0;" class="nav-sep"></div>
-    <button id="theme-toggle" onclick="toggleTheme()" style="background:var(--card);border:1px solid var(--border);border-radius:100px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;transition:all .25s;color:var(--white2);font-size:11px;font-weight:600;flex-shrink:0;white-space:nowrap;">
-      <span id="theme-icon" style="font-size:13px;">☀️</span>
-      <span id="theme-label">Light</span>
-    </button>
+    <div class="theme-picker">
+      <button id="theme-toggle" onclick="toggleThemeDD()" style="background:var(--card);border:1px solid var(--border);border-radius:100px;padding:5px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;transition:all .25s;color:var(--white2);font-size:11px;font-weight:600;flex-shrink:0;white-space:nowrap;">
+        <span class="theme-swatch" id="theme-current-swatch" style="background:var(--gold);"></span>
+        <span id="theme-label">Onyx</span>
+        <span style="font-size:9px;color:var(--dim);">▾</span>
+      </button>
+      <div class="theme-dd" id="theme-dd">
+        <div class="theme-opt active" id="topt-dark" onclick="setTheme('dark')">
+          <span class="theme-swatch" style="background:#0C0C0E;border-color:#C9A84C;"></span> Onyx Gold
+        </div>
+        <div class="theme-opt" id="topt-light" onclick="setTheme('light')">
+          <span class="theme-swatch" style="background:#F8F7F4;border-color:#B8922A;"></span> Daylight
+        </div>
+        <div class="theme-opt" id="topt-market" onclick="setTheme('market')">
+          <span class="theme-swatch" style="background:#1C1410;border-color:#E8743D;"></span> Market Day
+        </div>
+        <div class="theme-opt" id="topt-lagos" onclick="setTheme('lagos')">
+          <span class="theme-swatch" style="background:#070D14;border-color:#3DC9E8;"></span> Lagos Blue
+        </div>
+      </div>
+    </div>
     <span class="nav-link" id="nl-rewards" onclick="STATE.user?goTo('rewards'):openAuth('login')" style="color:var(--gold);">⭐ Rewards</span>
     <div id="auth-btns" style="display:flex;gap:8px;">
       <button class="btn btn-outline" onclick="openAuth('login')" style="white-space:nowrap;padding:7px 13px;font-size:12px;">Login</button>
@@ -1432,24 +1507,36 @@ const _origSubmit = window.submitProduct;
 // ═══════════════════════════
 // THEME
 // ═══════════════════════════
-function toggleTheme(){
-  const isLight = document.body.classList.toggle('light');
-  document.getElementById('theme-icon').textContent = isLight ? '🌙' : '☀️';
-  document.getElementById('theme-label').textContent = isLight ? 'Dark' : 'Light';
-  localStorage.setItem('avx-theme', isLight ? 'light' : 'dark');
+const THEMES = {
+  dark:   { label:'Onyx',    swatch:'#C9A84C' },
+  light:  { label:'Daylight',swatch:'#B8922A' },
+  market: { label:'Market',  swatch:'#E8743D' },
+  lagos:  { label:'Lagos',   swatch:'#3DC9E8' },
+};
+function toggleThemeDD(){
+  document.getElementById('theme-dd').classList.toggle('open');
 }
+function closeThemeDD(){
+  document.getElementById('theme-dd').classList.remove('open');
+}
+function setTheme(name){
+  document.body.classList.remove('light','market','lagos');
+  if(name!=='dark') document.body.classList.add(name);
+  document.getElementById('theme-current-swatch').style.background = THEMES[name].swatch;
+  document.getElementById('theme-label').textContent = THEMES[name].label;
+  document.querySelectorAll('.theme-opt').forEach(el=>el.classList.remove('active'));
+  document.getElementById('topt-'+name).classList.add('active');
+  localStorage.setItem('avx-theme', name);
+  closeThemeDD();
+}
+document.addEventListener('click', e=>{
+  const picker = document.querySelector('.theme-picker');
+  if(picker && !picker.contains(e.target)) closeThemeDD();
+});
 // Apply saved theme on load
 (function(){
-  const saved = localStorage.getItem('avx-theme');
-  if(saved === 'light'){
-    document.body.classList.add('light');
-    setTimeout(()=>{
-      const icon = document.getElementById('theme-icon');
-      const label = document.getElementById('theme-label');
-      if(icon) icon.textContent = '🌙';
-      if(label) label.textContent = 'Dark';
-    }, 0);
-  }
+  const saved = localStorage.getItem('avx-theme') || 'dark';
+  setTimeout(()=>setTheme(saved), 0);
 })();
 
 // ═══════════════════════════
@@ -1558,6 +1645,9 @@ onAuthStateChanged(auth,u=>{
   if(u){
     STATE.user={name:u.displayName||u.email.split('@')[0],email:u.email||'',uid:u.uid};
     showUserNav();
+  }else{
+    STATE.user=null;
+    showAuthNav();
   }
 });
 
