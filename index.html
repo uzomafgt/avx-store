@@ -886,17 +886,7 @@ footer p{font-size:12px;color:var(--dim);}
       <div class="atab" id="at-signup" onclick="switchTab('signup')">Sign Up</div>
     </div>
     <div class="mbody" style="gap:12px;">
-      <!-- SOCIAL FIRST - full width -->
-      <button class="social-btn" style="width:100%;padding:14px;font-size:14px;font-weight:700;border-radius:10px;gap:10px;" onclick="window.doGoogleLogin?doGoogleLogin():toast('Loading...')">
-        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C36.9 36.8 44 31 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>
-        Continue with Google
-      </button>
-      <button class="social-btn" style="width:100%;padding:14px;font-size:14px;font-weight:700;border-radius:10px;gap:10px;" onclick="window.doAppleLogin?doAppleLogin():toast('Loading...')">
-        <svg width="18" height="18" viewBox="0 0 814 1000" fill="white"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 376.7 0 248.3 0 124.8c0-70.3 24.5-135.1 68.5-181.4C112.6 97.3 155.5 75 227.5 75c69.4 0 121.8 42.1 164 42.1 40.8 0 99.9-44.9 181.9-44.9 29.4 0 108.2 2.6 163.9 96.8zm-87.1-211.4c-36.3 42.1-97.5 74.8-157.8 74.8-6.5 0-13-.6-19.4-1.9 1.3-55.5 38.3-113.2 78.3-149.1 42.1-38.3 103.7-67 162.6-67 1.9 0 3.9 0 5.8.6-1.9 58.5-37 115.8-69.5 142.6z"/></svg>
-        Continue with Apple
-      </button>
-      <div class="divider"><span>or use email</span></div>
-      <!-- EMAIL FORM -->
+      <!-- EMAIL FORM FIRST -->
       <div id="af-name" style="display:none;">
         <label class="fl">Full Name</label>
         <input class="fi" id="a-name" placeholder="e.g. Uzoma Okeke" style="border-radius:10px;padding:14px 16px;"/>
@@ -911,6 +901,16 @@ footer p{font-size:12px;color:var(--dim);}
       </div>
       <div class="err" id="a-err" style="display:none;"></div>
       <button class="btn btn-gold" id="a-btn" style="width:100%;padding:14px;font-size:14px;border-radius:10px;" onclick="doAuth()">Sign In</button>
+      <div class="divider"><span>or continue with</span></div>
+      <!-- SOCIAL BELOW -->
+      <button class="social-btn" style="width:100%;padding:14px;font-size:14px;font-weight:700;border-radius:10px;gap:10px;" onclick="window.doGoogleLogin?doGoogleLogin():toast('Loading...')">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H24v8h11.3c-.8 2.3-2.3 4.2-4.3 5.5l6.2 5.2C36.9 36.8 44 31 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>
+        Continue with Google
+      </button>
+      <button class="social-btn" style="width:100%;padding:14px;font-size:14px;font-weight:700;border-radius:10px;gap:10px;" onclick="window.doAppleLogin?doAppleLogin():toast('Loading...')">
+        <svg width="18" height="18" viewBox="0 0 814 1000" fill="white"><path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 376.7 0 248.3 0 124.8c0-70.3 24.5-135.1 68.5-181.4C112.6 97.3 155.5 75 227.5 75c69.4 0 121.8 42.1 164 42.1 40.8 0 99.9-44.9 181.9-44.9 29.4 0 108.2 2.6 163.9 96.8zm-87.1-211.4c-36.3 42.1-97.5 74.8-157.8 74.8-6.5 0-13-.6-19.4-1.9 1.3-55.5 38.3-113.2 78.3-149.1 42.1-38.3 103.7-67 162.6-67 1.9 0 3.9 0 5.8.6-1.9 58.5-37 115.8-69.5 142.6z"/></svg>
+        Continue with Apple
+      </button>
       <div style="text-align:center;font-size:13px;color:var(--dim);padding-bottom:4px;">
         <span id="a-sw-txt">No account? </span>
         <span id="a-sw-lnk" style="color:var(--gold);cursor:pointer;font-weight:700;" onclick="switchTab(STATE.authTab==='login'?'signup':'login')">Sign up free</span>
