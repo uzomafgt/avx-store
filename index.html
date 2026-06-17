@@ -654,8 +654,9 @@ footer p{font-size:12px;color:var(--dim);}
     <div class="user-wrap" id="user-wrap" style="display:none;">
       <button class="btn btn-gold" onclick="openListModal()" style="margin-right:4px;font-size:12px;padding:8px 16px;">+ List Product</button>
       <div class="user-btn" onclick="toggleDD()">
-        <div class="user-av" id="u-av">U</div>
-        <span class="user-name" id="u-name"></span>
+        <div class="user-av" id="u-av">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+        </div>
         <span class="user-chevron">▾</span>
       </div>
       <div class="user-dd" id="u-dd">
@@ -676,6 +677,11 @@ footer p{font-size:12px;color:var(--dim);}
     </div>
   </div>
 </nav>
+
+<!-- VERIFY EMAIL BANNER -->
+<div id="verify-banner" style="display:none;background:rgba(201,168,76,.1);border-bottom:1px solid rgba(201,168,76,.25);padding:10px 20px;text-align:center;font-size:12px;color:var(--gold);">
+  📧 Verify your email to list products — <span onclick="resendVerification()" style="text-decoration:underline;cursor:pointer;font-weight:700;">Resend verification email</span>
+</div>
 
 <!-- HOME -->
 <div id="pg-home" class="pg active">
@@ -876,11 +882,11 @@ footer p{font-size:12px;color:var(--dim);}
       </div>
       <div>
         <label class="fl">Email Address</label>
-        <input class="fi" id="a-email" type="email" placeholder="you@email.com" style="border-radius:10px;padding:14px 16px;"/>
+        <input class="fi" id="a-email" name="email" type="email" autocomplete="email" placeholder="you@email.com" style="border-radius:10px;padding:14px 16px;"/>
       </div>
       <div>
         <label class="fl">Password</label>
-        <input class="fi" id="a-pass" type="password" placeholder="Min. 6 characters" style="border-radius:10px;padding:14px 16px;"/>
+        <input class="fi" id="a-pass" name="password" type="password" autocomplete="current-password" placeholder="Min. 6 characters" style="border-radius:10px;padding:14px 16px;"/>
       </div>
       <div class="err" id="a-err" style="display:none;"></div>
       <button class="btn btn-gold" id="a-btn" style="width:100%;padding:14px;font-size:14px;border-radius:10px;" onclick="doAuth()">Sign In</button>
@@ -1052,14 +1058,16 @@ document.addEventListener('click',e=>{
 function showUserNav(){
   document.getElementById('auth-btns').style.display='none';
   document.getElementById('user-wrap').style.display='flex';
-  document.getElementById('u-av').textContent=STATE.user.name[0].toUpperCase();
-  document.getElementById('u-name').textContent=STATE.user.name.split(' ')[0];
   document.getElementById('dd-name').textContent=STATE.user.name;
+  const banner=document.getElementById('verify-banner');
+  if(banner) banner.style.display=(STATE.user.emailVerified===false)?'block':'none';
   document.getElementById('dd-email').textContent=STATE.user.email;
 }
 function showAuthNav(){
   document.getElementById('auth-btns').style.display='flex';
   document.getElementById('user-wrap').style.display='none';
+  const banner=document.getElementById('verify-banner');
+  if(banner) banner.style.display='none';
 }
 
 // ═══════════════════════════
@@ -1075,6 +1083,7 @@ function switchTab(tab){
   document.getElementById('a-sw-txt').textContent=tab==='login'?'No account? ':'Already have one? ';
   document.getElementById('a-sw-lnk').textContent=tab==='login'?'Sign up free':'Sign in';
   document.getElementById('a-err').style.display='none';
+  document.getElementById('a-pass').setAttribute('autocomplete', tab==='signup'?'new-password':'current-password');
 }
 function doAuth(){
   const name=document.getElementById('a-name').value.trim();
@@ -1520,7 +1529,7 @@ buildMarquee();
 <!-- FIREBASE -->
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,GoogleAuthProvider,OAuthProvider,signInWithPopup}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,GoogleAuthProvider,OAuthProvider,signInWithPopup,sendEmailVerification}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import{getFirestore,collection,addDoc,query,orderBy,onSnapshot,updateDoc,doc,arrayUnion}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app=initializeApp({
@@ -1555,7 +1564,8 @@ window.doAuth=async()=>{
         initial:name[0].toUpperCase(),
         createdAt:new Date()
       });
-      toast('Welcome, '+name.split(' ')[0]+'! 🔥');
+      try{await sendEmailVerification(cred.user);}catch(e){}
+      toast('Check your email to verify your account! 📧');
     }else{
       await signInWithEmailAndPassword(auth,email,pass);
       toast('Welcome back! 🔥');
@@ -1607,14 +1617,24 @@ window.doAppleLogin=async()=>{
 
 // ── LOGOUT ──
 window.doLogout=async()=>{
-  try{await signOut(auth);}catch(e){}
   STATE.user=null;showAuthNav();closeDD();toast('Logged out!');
+  try{await signOut(auth);}catch(e){}
+};
+
+// ── RESEND VERIFICATION ──
+window.resendVerification=async()=>{
+  try{
+    await sendEmailVerification(auth.currentUser);
+    toast('Verification email sent! Check your inbox 📧');
+  }catch(e){
+    toast('Could not send — try again shortly');
+  }
 };
 
 // ── AUTH STATE ──
 onAuthStateChanged(auth,u=>{
   if(u){
-    STATE.user={name:u.displayName||u.email.split('@')[0],email:u.email||'',uid:u.uid};
+    STATE.user={name:u.displayName||u.email.split('@')[0],email:u.email||'',uid:u.uid,emailVerified:u.emailVerified};
     showUserNav();
   }else{
     STATE.user=null;
