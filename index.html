@@ -1085,13 +1085,13 @@ function showAuthNav(){
 function openAuth(tab){switchTab(tab);openM('auth-modal');}
 function switchTab(tab){
   STATE.authTab=tab;
+  document.getElementById('at-login').classList.toggle('on',tab==='login');
+  document.getElementById('at-signup').classList.toggle('on',tab==='signup');
   document.getElementById('af-name').style.display=tab==='signup'?'block':'none';
-  document.getElementById('a-btn').textContent='Continue';
+  document.getElementById('a-btn').textContent=tab==='signup'?'Create Free Account':'Sign In';
   document.getElementById('a-sw-txt').textContent=tab==='login'?'No account? ':'Already have one? ';
   document.getElementById('a-sw-lnk').textContent=tab==='login'?'Sign up free':'Sign in';
   document.getElementById('a-err').style.display='none';
-  document.getElementById('auth-title').textContent=tab==='login'?'Log in':'Sign up';
-  document.getElementById('auth-sub').textContent=tab==='login'?'Welcome back to AVX STORE':'Join AVX STORE for free';
 }
 function doAuth(){
   const name=document.getElementById('a-name').value.trim();
