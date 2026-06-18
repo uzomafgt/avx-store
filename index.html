@@ -678,11 +678,6 @@ footer p{font-size:12px;color:var(--dim);}
   </div>
 </nav>
 
-<!-- VERIFY EMAIL BANNER -->
-<div id="verify-banner" style="display:none;background:rgba(201,168,76,.1);border-bottom:1px solid rgba(201,168,76,.25);padding:10px 20px;text-align:center;font-size:12px;color:var(--gold);">
-  📧 Verify your email to list products — <span onclick="resendVerification()" style="text-decoration:underline;cursor:pointer;font-weight:700;">Resend verification email</span>
-</div>
-
 <!-- HOME -->
 <div id="pg-home" class="pg active">
   <!-- HERO -->
@@ -961,7 +956,7 @@ footer p{font-size:12px;color:var(--dim);}
         <div class="dzone" id="dzone">
           <input type="file" accept="image/*" onchange="handleImg(event)"/>
           <div id="dzone-prev">
-            <div class="dzone-icon">📸</div>
+            <div class="dzone-icon" style="display:flex;justify-content:center;color:var(--dim);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
             <p><strong>Click to upload</strong> or drag & drop</p>
             <p style="font-size:11px;margin-top:4px;color:var(--dim);">PNG, JPG up to 5MB</p>
           </div>
@@ -1087,15 +1082,11 @@ function showUserNav(){
   document.getElementById('auth-btns').style.display='none';
   document.getElementById('user-wrap').style.display='flex';
   document.getElementById('dd-name').textContent=STATE.user.name;
-  const banner=document.getElementById('verify-banner');
-  if(banner) banner.style.display=(STATE.user.emailVerified===false)?'block':'none';
   document.getElementById('dd-email').textContent=STATE.user.email;
 }
 function showAuthNav(){
   document.getElementById('auth-btns').style.display='flex';
   document.getElementById('user-wrap').style.display='none';
-  const banner=document.getElementById('verify-banner');
-  if(banner) banner.style.display='none';
 }
 
 // ═══════════════════════════
@@ -1130,7 +1121,6 @@ function doAuth(){
 function doLogout(){STATE.user=null;showAuthNav();closeDD();toast('Logged out!');}
 function openListModal(){
   if(!STATE.user){openAuth('signup');return;}
-  if(STATE.user.emailVerified===false){toast('Verify your email first! Check the banner above 📧');return;}
   openM('list-modal');
 }
 
@@ -1423,7 +1413,7 @@ function submitProduct(){
   document.getElementById('p-name').value='';
   document.getElementById('p-price').value='';
   document.getElementById('p-desc').value='';
-  document.getElementById('dzone-prev').innerHTML='<div class="dzone-icon">📸</div><p><strong>Click to upload</strong> or drag & drop</p><p style="font-size:11px;margin-top:4px;color:var(--dim);">PNG, JPG up to 5MB</p>';
+  document.getElementById('dzone-prev').innerHTML='<div class="dzone-icon" style="display:flex;justify-content:center;color:var(--dim);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><p><strong>Click to upload</strong> or drag & drop</p><p style="font-size:11px;margin-top:4px;color:var(--dim);">PNG, JPG up to 5MB</p>';
   STATE.uploadedImg=null;
 }
 
@@ -1750,7 +1740,7 @@ window.submitProduct=async()=>{
   document.getElementById('p-name').value='';
   document.getElementById('p-price').value='';
   document.getElementById('p-desc').value='';
-  document.getElementById('dzone-prev').innerHTML='<div class="dzone-icon">📸</div><p><strong>Click to upload</strong> or drag & drop</p><p style="font-size:11px;margin-top:4px;color:var(--dim);">PNG, JPG up to 5MB</p>';
+  document.getElementById('dzone-prev').innerHTML='<div class="dzone-icon" style="display:flex;justify-content:center;color:var(--dim);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><p><strong>Click to upload</strong> or drag & drop</p><p style="font-size:11px;margin-top:4px;color:var(--dim);">PNG, JPG up to 5MB</p>';
   STATE.uploadedImg=null;
 };
 
