@@ -917,14 +917,42 @@ footer p{font-size:12px;color:var(--dim);}
       <div class="frow">
         <div><label class="fl">Price (₦)</label><input class="fi" id="p-price" type="number" placeholder="5000"/></div>
         <div><label class="fl">Category</label>
-          <select class="fi" id="p-cat" style="appearance:none;cursor:pointer;">
-            <option value="fashion">👗 Fashion</option>
-            <option value="electronics">📱 Electronics</option>
-            <option value="beauty">💄 Beauty</option>
-            <option value="food">🍖 Food</option>
-            <option value="art">🎨 Art</option>
-            <option value="other">📦 Other</option>
-          </select>
+          <div class="theme-picker" id="cat-picker" style="width:100%;">
+            <button type="button" onclick="toggleCatDD()" class="fi" style="width:100%;display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-align:left;">
+              <span id="cat-selected-label" style="display:flex;align-items:center;gap:8px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+                Fashion
+              </span>
+              <span style="font-size:10px;color:var(--dim);">▾</span>
+            </button>
+            <input type="hidden" id="p-cat" value="fashion"/>
+            <div class="theme-dd" id="cat-dd" style="width:100%;">
+              <div class="theme-opt active" onclick="selectCat('fashion','Fashion')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"/></svg>
+                Fashion
+              </div>
+              <div class="theme-opt" onclick="selectCat('electronics','Electronics')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                Electronics
+              </div>
+              <div class="theme-opt" onclick="selectCat('beauty','Beauty')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V6a3 3 0 0 1 6 0v5"/><rect x="6" y="11" width="12" height="10" rx="2"/></svg>
+                Beauty
+              </div>
+              <div class="theme-opt" onclick="selectCat('food','Food')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+                Food
+              </div>
+              <div class="theme-opt" onclick="selectCat('art','Art')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+                Art
+              </div>
+              <div class="theme-opt" onclick="selectCat('other','Other')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                Other
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div><label class="fl">Description</label><textarea class="fi" id="p-desc" placeholder="Tell buyers what makes your product special…"></textarea></div>
@@ -1168,7 +1196,7 @@ function renderHome(){
       <div class="sav">${s.initial}</div>
       <div class="sname">@${s.handle}</div>
       <div class="smeta">${s.products} product${s.products!==1?'s':''}</div>
-      <div class="srating">★ ${s.rating}</div>
+      <div class="srating">${s.rating?'★ '+s.rating:'New seller'}</div>
     </div>`).join('')
     :'<div style="padding:20px;color:var(--dim);font-size:13px;">No sellers yet — <span onclick="openAuth(\'signup\')" style="color:var(--gold);cursor:pointer;">be the first!</span></div>';
 }
@@ -1200,7 +1228,7 @@ function renderSellers(){
       <div class="sav" style="width:52px;height:52px;font-size:18px;margin-bottom:14px;">${s.initial}</div>
       <div style="font-family:'DM Sans',sans-serif;font-weight:700;font-size:16px;margin-bottom:4px;">@${s.handle}</div>
       <div style="font-size:12px;color:var(--dim);margin-bottom:10px;">${s.products} product${s.products!==1?'s':''} listed</div>
-      <div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:16px;">${stars(s.rating,12)} ${s.rating}</div>
+      <div style="font-size:12px;color:var(--gold);font-weight:600;margin-bottom:16px;">${s.rating?stars(s.rating,12)+' '+s.rating:'<span style=\"color:var(--dim);font-weight:500;\">New seller · no ratings yet</span>'}</div>
       <button class="btn btn-outline" style="width:100%;font-size:12px;" onclick="filterBySeller('${s.handle}')">View Products →</button>
     </div>`).join('')
     :`<div class="empty"><div class="empty-icon">👥</div><div class="empty-title">No sellers yet</div><div class="empty-sub">Sign up and become the first seller on AVX STORE!</div><button class="btn btn-gold" style="padding:12px 28px;" onclick="openAuth('signup')">Become a Seller</button></div>`;
@@ -1336,6 +1364,18 @@ function processPay(){
 // ═══════════════════════════
 // LIST PRODUCT
 // ═══════════════════════════
+function toggleCatDD(){document.getElementById('cat-dd').classList.toggle('open');}
+function selectCat(val,label){
+  document.getElementById('p-cat').value=val;
+  document.getElementById('cat-selected-label').innerHTML=document.querySelector(`.theme-opt[onclick="selectCat('${val}','${label}')"]`).innerHTML;
+  document.querySelectorAll('#cat-dd .theme-opt').forEach(el=>el.classList.remove('active'));
+  event.target.closest('.theme-opt').classList.add('active');
+  document.getElementById('cat-dd').classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  const picker=document.getElementById('cat-picker');
+  if(picker && !picker.contains(e.target)) document.getElementById('cat-dd').classList.remove('open');
+});
 function handleImg(e){
   const file=e.target.files[0];if(!file)return;
   const r=new FileReader();
@@ -1371,7 +1411,7 @@ function submitProduct(){
     SELLERS.unshift({
       handle:STATE.user.name.replace(/\s/g,'').toLowerCase(),
       name:STATE.user.name,
-      products:1,rating:'5.0',
+      products:1,rating:null,
       initial:STATE.user.name[0].toUpperCase(),
       uid:STATE.user.uid||'guest',
     });
@@ -1564,7 +1604,7 @@ window.doAuth=async()=>{
       await addDoc(collection(db,'sellers'),{
         uid:cred.user.uid,name,email,
         handle:name.replace(/\s/g,'').toLowerCase(),
-        products:0,rating:'5.0',
+        products:0,rating:null,
         initial:name[0].toUpperCase(),
         createdAt:new Date()
       });
@@ -1593,7 +1633,7 @@ window.doGoogleLogin=async()=>{
     const result=await signInWithPopup(auth,gProvider);
     const u=result.user;
     // Save seller if new
-    try{await addDoc(collection(db,'sellers'),{uid:u.uid,name:u.displayName||u.email.split('@')[0],email:u.email||'',handle:(u.displayName||u.email).replace(/\s/g,'').toLowerCase(),products:0,rating:'5.0',initial:(u.displayName||'G')[0].toUpperCase(),createdAt:new Date()});}catch(e){}
+    try{await addDoc(collection(db,'sellers'),{uid:u.uid,name:u.displayName||u.email.split('@')[0],email:u.email||'',handle:(u.displayName||u.email).replace(/\s/g,'').toLowerCase(),products:0,rating:null,initial:(u.displayName||'G')[0].toUpperCase(),createdAt:new Date()});}catch(e){}
     toast('Welcome, '+(u.displayName||'').split(' ')[0]+'! 🔥');
     closeM('auth-modal');
   }catch(e){
@@ -1609,7 +1649,7 @@ window.doAppleLogin=async()=>{
   try{
     const result=await signInWithPopup(auth,aProvider);
     const u=result.user;
-    try{await addDoc(collection(db,'sellers'),{uid:u.uid,name:u.displayName||'Apple User',email:u.email||'',handle:(u.displayName||'appleuser').replace(/\s/g,'').toLowerCase(),products:0,rating:'5.0',initial:'A',createdAt:new Date()});}catch(e){}
+    try{await addDoc(collection(db,'sellers'),{uid:u.uid,name:u.displayName||'Apple User',email:u.email||'',handle:(u.displayName||'appleuser').replace(/\s/g,'').toLowerCase(),products:0,rating:null,initial:'A',createdAt:new Date()});}catch(e){}
     toast('Welcome! 🔥');
     closeM('auth-modal');
   }catch(e){
@@ -1667,7 +1707,7 @@ try{
       SELLERS.push({
         handle:s.handle||s.name,name:s.name,
         products:PRODUCTS.filter(p=>p.uid===s.uid).length,
-        rating:s.rating||'5.0',
+        rating:s.rating||null,
         initial:s.initial||s.name[0].toUpperCase(),
         uid:s.uid,email:s.email,
       });
